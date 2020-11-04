@@ -14,7 +14,7 @@ $ `sudo echo ' alias fan="sudo sh /home/$USER/fan-control/fan>> ~/.bashrc`
 ___
 
 ## Option B
-here you create the command but you'll have to repeat the whole process every time you want to update)
+(here you create the command but you'll have to repeat the whole process every time you want to update)
 
 1. Clone the repo in home `cd ~/ && git clone https://github.com/juampapo546/Fan-control/ fan-control`
 
