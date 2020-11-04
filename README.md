@@ -47,7 +47,7 @@ sudo fan [ SELECT FAN TO CONTROL ] [SELECT THE PERCENTAGE YOU WANT THE FAN TO RU
 		-cpu 				-auto 	
 		-auto 
 ```
-For example if you want cpu fan to run at it's 65% it's <br>
+For example if you want cpu fan to run at it's 65% the input should be: <br>
 
 ```
 sudo fan cpu 65
