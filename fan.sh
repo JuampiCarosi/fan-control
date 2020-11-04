@@ -77,8 +77,9 @@ if [ "$1" = "hdd" ]; then
       else
 
       # Writing the final value to the applemc files
-      echo $hdd_final > $fan_hdd_current_output_file
-      echo "hdd fan set to" $hdd_final "rpm"
+      echo $hdd_final > $fan_hdd_current_output_file && echo "hdd fan set to" $hdd_final "rpm" || echo  "
+Try running command as sudo"
+
     fi
 
 fi
