@@ -27,7 +27,7 @@ ____
 ### Run fan!
 
  ``` 
-sudo fan [ SELECT FAN TO CONTROL ] [SELECT THE PERCENTAGE YOU WANT THE FAN TO RUN ] <br>
+sudo fan [ SELECT FAN TO CONTROL ] [SELECT THE PERCENTAGE YOU WANT THE FAN TO RUN ] 
 
 		-hdd				-value (nummber from 1 to 100)  
 		-cpu 
