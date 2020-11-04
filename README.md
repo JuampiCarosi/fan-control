@@ -2,7 +2,7 @@ This script has been tested on a 2011 iMac 21.5 inch running Ubuntu 20.04
 
 Usage:
 ## Option A 
-(here you don't create the actual command, just an alias, but it's more updatable, just `git pull` will get the job done
+(here you don't create the actual command, just an alias, but it's more updatable, just `git pull` will get the job done)
 
 1. Clone the repo in home `cd ~/ && git clone https://github.com/juampapo546/Fan-control/`
 
