@@ -8,7 +8,7 @@ Usage:
 
 2. Create the alias for this script
 
-$ `sudo echo ' alias fan="sudo sh /home/$USER/fan-control/fan.sh>> ~/.bashrc`
+$ `sudo echo  'alias fan="sudo sh /home/$USER/fan-control/fan.sh' >> ~/.bashrc`
 
 
 ___
