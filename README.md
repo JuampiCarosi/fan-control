@@ -8,7 +8,7 @@ Usage:
 
 2. Create the alias for this script
 
-$ `sudo echo ' alias fan="sudo sh /home/$USER/fan-control/fan>> ~/.bashrc`
+$ `sudo echo ' alias fan="sudo sh /home/$USER/fan-control/fan.sh>> ~/.bashrc`
 
 
 ___
@@ -18,7 +18,7 @@ ___
 
 1. Clone the repo in home `cd ~/ && git clone https://github.com/juampapo546/Fan-control/ fan-control`
 
-2. Move the script to /bin and make it executable ` sudo mv fan-control/fan /bin/fan && sudo chmod +x /bin/fan/ `
+2. Move the script to /bin and make it executable ` sudo mv fan-control/fan.sh /bin/fan && sudo chmod +x /bin/fan `
 
 3. (optional) Clean remainings of the repo `rm -rf ~/fan-control `
 
