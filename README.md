@@ -30,7 +30,7 @@ ____
 sudo fan [ SELECT FAN TO CONTROL ] [SELECT THE PERCENTAGE YOU WANT THE FAN TO RUN ] 
 
 		-hdd				-value (nummber from 1 to 100)  
-		-cpu 
+		-cpu 				-auto 	
 		-auto 
 ```
 For example if you want cpu fan to run at it's 65% it's <br>
