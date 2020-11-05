@@ -1,5 +1,5 @@
 # iMac Fan control
-Note: This script has been tested on a 2011 iMac 21.5 inch running Ubuntu 20.04, if you have problems with this script on other iMacs please open an issue
+Note: This script has been tested on a 2011 iMac 21.5 (12,1) inch and MacBook 5,1 running Ubuntu 20.04, if you have problems with this script on other Macs please open an issue
 
 Usage:
 ## Option A 
