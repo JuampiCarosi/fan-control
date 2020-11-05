@@ -13,7 +13,7 @@ cd ~/ && git clone https://github.com/juampapo546/Fan-control/
 
 2. Create the alias for this script <br>
  ```
- sudo echo  'alias fan="sudo sh /home/$USER/fan-control/fan.sh"' >> ~/.bashrc
+ sudo echo  'alias fan="sudo sh /home/$USER/Fan-control/fan.sh"' >> ~/.bashrc
  ```
 
 ___
