@@ -200,6 +200,24 @@ case $1 in
         fi
         
     ;;
+
+    ### EXHAUST CONTROL
+    exhaust)
+        if [ $label1 = "exhaust" ]; then
+            function_fan1
+        fi
+
+
+        if [ $label2 =  "exhaust" ]; then
+            function_fan2
+
+        fi
+
+        if [ $label3 =  "exhaust" ]; then
+            function_fan3
+
+        fi
+    ;;    
 esac
 
 
