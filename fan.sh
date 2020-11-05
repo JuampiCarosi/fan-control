@@ -1,23 +1,25 @@
 #Define input variable for the functions
 input=$2
 
-#Match labels with fan number
+#Match labels with fan number and get control files
+fan1_control_file='/sys/devices/platform/applesmc.768/fan1_manual'
 fan1_label='/sys/devices/platform/applesmc.768/fan1_label'
 label1=$(cat $fan1_label | tr '[:upper:]' '[:lower:]') 
 
 if [ $label1 != "exhaust" ]; then 
+	fan2_control_file='/sys/devices/platform/applesmc.768/fan2_manual'
+	fan2_label='/sys/devices/platform/applesmc.768/fan2_label'
+	label2=$(cat $fan2_label | tr '[:upper:]' '[:lower:]') 
 
-    fan2_label='/sys/devices/platform/applesmc.768/fan2_label'
-    label2=$(cat $fan2_label | tr '[:upper:]' '[:lower:]') 
-
-    fan3_label='/sys/devices/platform/applesmc.768/fan3_label'
-    label3=$(cat $fan3_label | tr '[:upper:]' '[:lower:]') 
+	fan3_control_file='/sys/devices/platform/applesmc.768/fan3_manual'    
+	fan3_label='/sys/devices/platform/applesmc.768/fan3_label'
+	label3=$(cat $fan3_label | tr '[:upper:]' '[:lower:]') 
 fi
 
 # Fan functions
 function_fan1 () {
+
     # Getting fan files and data from applesmc.768
-    fan1_control_file='/sys/devices/platform/applesmc.768/fan1_manual'
     fan1_manual=$(cat $fan1_control_file)
 
     fan1_max_file='/sys/devices/platform/applesmc.768/fan1_max'
@@ -56,8 +58,6 @@ function_fan1 () {
 function_fan2 () {
 
     #Getting values from applemc.768
-
-    fan2_control_file='/sys/devices/platform/applesmc.768/fan2_manual'
     fan2_manual=$(cat $fan2_control_file)
 
     fan2_max_file='/sys/devices/platform/applesmc.768/fan2_max'
@@ -95,8 +95,6 @@ function_fan2 () {
 function_fan3 () {
 
     #Getting values from applemc.768
-
-    fan3_control_file='/sys/devices/platform/applesmc.768/fan3_manual'
     fan3_manual=$(cat $fan3_control_file)
 
     fan3_max_file='/sys/devices/platform/applesmc.768/fan3_max'
