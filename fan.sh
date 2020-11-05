@@ -5,12 +5,14 @@ input=$2
 fan1_label='/sys/devices/platform/applesmc.768/fan1_label'
 label1=$(cat $fan1_label | tr '[:upper:]' '[:lower:]') 
 
-fan2_label='/sys/devices/platform/applesmc.768/fan2_label'
-label2=$(cat $fan2_label | tr '[:upper:]' '[:lower:]') 
+if [ $label1 != "exhaust" ]; then 
 
-fan3_label='/sys/devices/platform/applesmc.768/fan3_label'
-label3=$(cat $fan3_label | tr '[:upper:]' '[:lower:]') 
+    fan2_label='/sys/devices/platform/applesmc.768/fan2_label'
+    label2=$(cat $fan2_label | tr '[:upper:]' '[:lower:]') 
 
+    fan3_label='/sys/devices/platform/applesmc.768/fan3_label'
+    label3=$(cat $fan3_label | tr '[:upper:]' '[:lower:]') 
+fi
 
 # Fan functions
 function_fan1 () {
@@ -105,7 +107,7 @@ function_fan3 () {
 
     fan3_current_output_file='/sys/devices/platform/applesmc.768/fan3_output'
 
-    # Putting fan on manual mode
+     # Putting fan on manual mode
     if [ $fan3_manual="0" ]; then
         echo "1" > $fan3_control_file
     fi
@@ -136,14 +138,18 @@ case $1 in
     "")
         echo "Available fans:"
         echo "  $label1"
-        echo "  $label2"
-        echo "  $label3"
+        if [ $label1 != "exhaust" ]; then 
+		echo "  $label2"
+		echo "  $label3"
+	fi
     ;;
     ### AUTO CONTROL
     auto)
         echo "0" > $fan1_control_file
-        echo "0" > $fan2_control_file
-        echo "0" > $fan3_control_file
+        if [ $label1 != "exhaust" ]; then 
+		echo "0" > $fan2_control_file
+		echo "0" > $fan3_control_file
+	fi
     ;;
 
     ####  HDD CONTROL
@@ -203,20 +209,7 @@ case $1 in
 
     ### EXHAUST CONTROL
     exhaust)
-        if [ $label1 = "exhaust" ]; then
-            function_fan1
-        fi
-
-
-        if [ $label2 =  "exhaust" ]; then
-            function_fan2
-
-        fi
-
-        if [ $label3 =  "exhaust" ]; then
-            function_fan3
-
-        fi
+       function_fan1
     ;;    
 esac
 
