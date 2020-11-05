@@ -40,12 +40,19 @@ ____
 
 ### Run fan!
 
- ``` 
+First check what fans are available for your mac
+
+```
+fan
+
+```
+Then choose one one of the output fans and run:
+
+``` 
 sudo fan [ SELECT FAN TO CONTROL ] [SELECT THE PERCENTAGE YOU WANT THE FAN TO RUN ] 
 
-		-hdd				-value (nummber from 1 to 100)  
-		-cpu 				-auto 	
-		-auto 
+		-hdd (an example)		-value (nummber from 1 to 100)  
+		-auto				-auto 	 
 ```
 For example if you want cpu fan to run at it's 65% the input should be: <br>
 

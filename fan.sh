@@ -132,14 +132,21 @@ function_fan3 () {
 
 # Commands
 case $1 in
-        ### AUTO CONTROL
+
+    "")
+        echo "Available fans:"
+        echo "  $label1"
+        echo "  $label2"
+        echo "  $label3"
+    ;;
+    ### AUTO CONTROL
     auto)
         echo "0" > $fan1_control_file
         echo "0" > $fan2_control_file
         echo "0" > $fan3_control_file
     ;;
 
-        ####  HDD CONTROL
+    ####  HDD CONTROL
     hdd)
         if [ $label1 = "hdd" ]; then
             function_fan1
@@ -157,7 +164,7 @@ case $1 in
         fi    
     ;;
 
-        ####  CPU CONTROL
+    ####  CPU CONTROL
     cpu)
         if [ $label1 = "cpu" ]; then
             function_fan1
@@ -175,7 +182,7 @@ case $1 in
         fi
     ;;      
 
-        ####  ODD CONTROL
+    ####  ODD CONTROL
     odd)
         if [ $label1 = "odd" ]; then
             function_fan1
