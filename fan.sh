@@ -117,9 +117,9 @@ function_fan3 () {
     fan3_net=$(($input*$fan3_100/100))
     fan3_final=$(($fan3_net+$fan3_min))
 
-    # Switch back fan2 to auto mode
+    # Switch back fan3 to auto mode
     if [ $input = "auto" ]; then
-    echo "0" > $fan2_control_file
+    echo "0" > $fan3_control_file
     echo "fan mode set to auto"
     else
 
