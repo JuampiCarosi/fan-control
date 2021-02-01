@@ -1,4 +1,4 @@
-# iMac Fan control
+# iMac fan control
 Note: This script has been tested on a 2011 iMac 21.5 (12,1) inch, MacBook 5,1 and 5,2 running Ubuntu 20.04, if you have problems with this script on other Macs please open an issue
 
 Usage:
@@ -8,12 +8,12 @@ Usage:
 
 1. Clone the repo in home 
 ```
-cd ~/ && git clone https://github.com/juampapo546/Fan-control/
+cd ~/ && git clone https://github.com/juampapo546/fan-control/
 ```
 
 2. Create the alias for this script <br>
  ```
- sudo echo  'alias fan="sudo sh /home/$USER/Fan-control/fan.sh"' >> ~/.bashrc
+ sudo echo  'alias fan="sudo sh /home/$USER/fan-control/fan.sh"' >> ~/.bashrc
  ```
 
 ___
@@ -23,7 +23,7 @@ ___
 
 1. Clone the repo in home <br>
 ```
-cd ~/ && git clone https://github.com/juampapo546/Fan-control/ fan-control
+cd ~/ && git clone https://github.com/juampapo546/fan-control/
 ```
 
 2. Move the script to /bin and make it executable <br>
