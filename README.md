@@ -11,11 +11,16 @@ Usage:
 cd ~/ && git clone https://github.com/juampapo546/fan-control/
 ```
 
-2. Create the alias for this script <br>
+2. Create the alias for this script <br> 
+If you use bash :
  ```
  sudo echo  'alias fan="sudo sh /home/$USER/fan-control/fan.sh"' >> ~/.bashrc
  ```
-
+If you use zsh :
+ ```
+ sudo echo  'alias fan="sudo sh /home/$USER/fan-control/fan.sh"' >> ~/.zshrc
+ ```
+If you have doubts you probably use bash, to be sure check if you have in your /home .bashrc or .zshrc 
 ___
 
 ## Option B
