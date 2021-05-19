@@ -6,7 +6,7 @@ fan1_control_file='/sys/devices/platform/applesmc.768/fan1_manual'
 fan1_label='/sys/devices/platform/applesmc.768/fan1_label'
 label1=$(cat $fan1_label | tr '[:upper:]' '[:lower:]') 
 
-if [ $label1 != "exhaust" ]; then 
+if [ $label1 != "exhaust" || $label1 != "master" ]; then 
 	fan2_control_file='/sys/devices/platform/applesmc.768/fan2_manual'
 	fan2_label='/sys/devices/platform/applesmc.768/fan2_label'
 	label2=$(cat $fan2_label | tr '[:upper:]' '[:lower:]') 
@@ -208,7 +208,12 @@ case $1 in
     ### EXHAUST CONTROL
     exhaust)
        function_fan1
-    ;;    
+    ;;   
+
+    ### MASTER CONTROL
+    master)
+        function_fan1
+    ;; 
 esac
 
 
