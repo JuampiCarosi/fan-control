@@ -136,7 +136,7 @@ case $1 in
     "")
         echo "Available fans:"
         echo "  $label1"
-        if [ $label1 != "exhaust" ]; then 
+        if [ $label1 != "exhaust" && $label1 != "master" ]; then 
 		echo "  $label2"
 		echo "  $label3"
 	fi
