@@ -19,12 +19,12 @@ label[1]=${label[1],,}
 if [[ "${label[1]}" != "exhaust" && "${label[1]}" != "master" ]]; then
 	fan_control_file[2]="$sysdir/fan2_manual"
 	fan_label[2]="$sysdir/fan2_label"
-    label[2]=$(< ${fan_label[1]} )
+    label[2]=$(< ${fan_label[2]} )
     label[2]=${label[2],,}
 
 	fan_control_file[3]="$sysdir/fan3_manual"
 	fan_label[3]="$sysdir/fan3_label"
-    label[3]=$(< ${fan_label[1]} )
+    label[3]=$(< ${fan_label[3]} )
     label[3]=${label[3],,}
 fi
 
