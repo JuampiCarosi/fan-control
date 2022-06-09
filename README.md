@@ -9,12 +9,12 @@ Usage:
 1. Clone the repo in home 
 ```
 cd ~/ && git clone https://github.com/juampapo546/fan-control/
-```
 
-2. Create the alias for this script <br> 
-If you use bash :
- ```
- sudo echo  'alias fan="sudo sh /home/$USER/fan-control/fan.sh"' >> ~/.bashrc
+2. Create the alias for this script <br>
+   If you use bash :
+
+```
+echo  'alias fan="sudo sh /home/$USER/fan-control/fan.sh"' >> ~/.bashrc
  ```
 If you use zsh :
  ```
