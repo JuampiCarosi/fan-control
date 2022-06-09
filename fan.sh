@@ -24,12 +24,15 @@ if ! [[ "${label[1]}" =~ ^(exhaust|master)$ ]]; then
 fi
 
 # fan() - set fan
-# argument is fan number (starting from 1)
+# $1 is fan number (starting from 1)
+# $2 is percent to apply
 fan_function() {
     local fan_manual fan_max_file fan_max fan_min_file fan_min
     local fan_current_output_file
     local -i fan_100 fan_net fan_final
     local fan="$1"
+    local -i input="$2"
+
     # Getting fan files and data from applesmc.768
     fan_manual=$(cat "${fan_control_file[$fan]}")
 
@@ -58,7 +61,7 @@ fan_function() {
         printf "fan mode set to auto"
     else
         # Writing the final value to the applemc files
-        if echo $fan_final > "$fan_current_output_file"; then
+        if echo "$fan_final" > "$fan_current_output_file"; then
             printf "fan set to %d rpm.\n" "$fan_final"
         else
             printf "Try running command as sudo\n"
@@ -67,9 +70,9 @@ fan_function() {
 }
 
 usage() {
-    printf "usage: %s [fan_type] value\n" "$CMD"
-    printf '  fan_type: "auto", "master", "exhaust", "hdd", "cpu" or "odd"\n'
-    printf '  if fan_type is not "auto", value is an integer between 0 and 100\n'
+    printf "usage: %s [fan] [percent]\n" "$CMD"
+    printf '  fan: "auto", "master", "exhaust", "hdd", "cpu" or "odd"\n'
+    printf '  if fan is not "auto", percent is an integer between 0 and 100\n'
     exit 1
 }
 
@@ -87,7 +90,7 @@ fi
 command="$1"
 if [[ "$command" != "auto" ]]; then
     if (( $# == 2 )); then
-        input="$2"
+        percent="$2"
     else
         usage
     fi
@@ -107,14 +110,14 @@ case "$command" in
     hdd|cpu|odd)
         for i in 1 2 3; do
             if [ "${label[$i]}" = "$command" ]; then
-                fan_function "$i" "$input"
+                fan_function "$i" "$percent"
             fi
         done
         ;;
 
     ### EXHAUST/MASTER CONTROL
     exhaust|master)
-        fan_function 1 "$input"
+        fan_function 1 "$percent"
         ;;
 
     *)
