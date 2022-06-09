@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 #
-# forked from https://github.com/juampapo546/fan-control
 
 CMD="${0##*/}"
 sysdir="/sys/devices/platform/applesmc.768"
