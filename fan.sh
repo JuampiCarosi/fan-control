@@ -1,19 +1,23 @@
+#!/usr/bin/env bash
+#
+# forked from https://github.com/juampapo546/fan-control
+
 #Define input variable for the functions
 input=$2
 
 #Match labels with fan number and get control files
 fan1_control_file='/sys/devices/platform/applesmc.768/fan1_manual'
 fan1_label='/sys/devices/platform/applesmc.768/fan1_label'
-label1=$(cat $fan1_label | tr '[:upper:]' '[:lower:]') 
+label1=$(cat $fan1_label | tr '[:upper:]' '[:lower:]')
 
-if [ $label1 != "exhaust" ] && [ $label1 != "master" ]; then 
+if [ $label1 != "exhaust" ] && [ $label1 != "master" ]; then
 	fan2_control_file='/sys/devices/platform/applesmc.768/fan2_manual'
 	fan2_label='/sys/devices/platform/applesmc.768/fan2_label'
-	label2=$(cat $fan2_label | tr '[:upper:]' '[:lower:]') 
+	label2=$(cat $fan2_label | tr '[:upper:]' '[:lower:]')
 
-	fan3_control_file='/sys/devices/platform/applesmc.768/fan3_manual'    
+	fan3_control_file='/sys/devices/platform/applesmc.768/fan3_manual'
 	fan3_label='/sys/devices/platform/applesmc.768/fan3_label'
-	label3=$(cat $fan3_label | tr '[:upper:]' '[:lower:]') 
+	label3=$(cat $fan3_label | tr '[:upper:]' '[:lower:]')
 fi
 
 # Fan functions
@@ -52,7 +56,7 @@ function_fan1 () {
         Try running command as sudo"
 
     fi
-    
+
 }
 
 function_fan2 () {
@@ -67,9 +71,9 @@ function_fan2 () {
     fan2_min=$(cat $fan2_min_file)
 
     fan2_current_output_file='/sys/devices/platform/applesmc.768/fan2_output'
-    
+
     # Putting fan on manual mode
-    if [ $fan2_manual="0" ]; then
+    if [ $fan2_manual = "0" ]; then
         echo "1" > $fan2_control_file
     fi
 
@@ -106,7 +110,7 @@ function_fan3 () {
     fan3_current_output_file='/sys/devices/platform/applesmc.768/fan3_output'
 
      # Putting fan on manual mode
-    if [ $fan3_manual="0" ]; then
+    if [ $fan3_manual = "0" ]; then
         echo "1" > $fan3_control_file
     fi
 
@@ -136,7 +140,7 @@ case $1 in
     "")
         echo "Available fans:"
         echo "  $label1"
-        if [ $label1 != "exhaust" ] && [ $label1 != "master" ]; then 
+        if [ $label1 != "exhaust" ] && [ $label1 != "master" ]; then
 		echo "  $label2"
 		echo "  $label3"
 	fi
@@ -144,7 +148,7 @@ case $1 in
     ### AUTO CONTROL
     auto)
         echo "0" > $fan1_control_file
-        if [ $label1 != "exhaust" ]; then 
+        if [ $label1 != "exhaust" ]; then
 		echo "0" > $fan2_control_file
 		echo "0" > $fan3_control_file
 	fi
@@ -165,7 +169,7 @@ case $1 in
         if [ $label3 =  "hdd" ]; then
             function_fan3
 
-        fi    
+        fi
     ;;
 
     ####  CPU CONTROL
@@ -184,7 +188,7 @@ case $1 in
             function_fan3
 
         fi
-    ;;      
+    ;;
 
     ####  ODD CONTROL
     odd)
@@ -202,23 +206,16 @@ case $1 in
             function_fan3
 
         fi
-        
+
     ;;
 
     ### EXHAUST CONTROL
     exhaust)
        function_fan1
-    ;;   
+    ;;
 
     ### MASTER CONTROL
     master)
         function_fan1
-    ;; 
+    ;;
 esac
-
-
-
-
-
-
-
