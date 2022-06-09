@@ -30,7 +30,7 @@ fan_function() {
     local fan_current_output_file
     local -i fan_100 fan_net fan_final
     local fan="$1"
-    local -i input="$2"
+    local percent="$2"                            # "auto" or 0-100
 
     # Getting fan files and data from applesmc.768
     fan_manual=$(cat "${fan_control_file[$fan]}")
@@ -43,22 +43,22 @@ fan_function() {
 
     fan_current_output_file="$sysdir/fan${fan}_output"
 
-    #Putting fan on manual mode
-    if [ "$fan_manual" = "0" ]; then
-        echo "1" > "${fan_control_file[$fan]}"
-    fi
-
-    # Calculating the net value that will be given to the fans
-    fan_100=$((fan_max - fan_min))
-    # Calculating final percentage value
-    fan_net=$((input * fan_100 / 100))
-    fan_final=$((fan_net + fan_min))
-
-    # Switch back fan1 to auto mode
-    if [ "$input" = "auto" ]; then
+    if [ "$percent" = "auto" ]; then
+        # Switch back fan1 to auto mode
         echo "0" > "${fan_control_file[$fan]}"
         printf "fan mode set to auto"
     else
+        #Putting fan on manual mode
+        if [ "$fan_manual" = "0" ]; then
+            echo "1" > "${fan_control_file[$fan]}"
+        fi
+
+        # Calculating the net value that will be given to the fans
+        fan_100=$((fan_max - fan_min))
+        # Calculating final percentage value
+        fan_net=$((percent * fan_100 / 100))
+        fan_final=$((fan_net + fan_min))
+
         # Writing the final value to the applemc files
         if echo "$fan_final" > "$fan_current_output_file"; then
             printf "fan set to %d rpm.\n" "$fan_final"
@@ -71,7 +71,7 @@ fan_function() {
 usage() {
     printf "usage: %s [fan] [percent]\n" "$CMD"
     printf '  fan: "auto", "master", "exhaust", "hdd", "cpu" or "odd"\n'
-    printf '  if fan is not "auto", percent is an integer between 0 and 100\n'
+    printf '  if fan is not "auto", percent is "auto" or a value between 0 and 100\n'
     exit 1
 }
 
