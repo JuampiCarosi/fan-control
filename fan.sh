@@ -2,30 +2,24 @@
 #
 # forked from https://github.com/juampapo546/fan-control
 
-#CMD="${0##*/}"
+CMD="${0##*/}"
 sysdir="/sys/devices/platform/applesmc.768"
-
-#Define input variable for the functions
-input=$2
 
 declare -a fan_control_file fan_label label
 
 #Match labels with fan number and get control files
-fan_control_file[1]="$sysdir/fan1_manual"
-fan_label[1]="$sysdir/fan1_label"
-label[1]=$(< ${fan_label[1]} )
-label[1]=${label[1],,}
+fan_info() {
+    local fan="$1"
+    fan_control_file[$fan]="$sysdir/fan${fan}_manual"
+    fan_label[$fan]="$sysdir/fan${fan}_label"
+    label[$fan]=$(< "${fan_label[$fan]}" )
+    label[$fan]=${label[$fan],,}
+}
 
-if [[ "${label[1]}" != "exhaust" && "${label[1]}" != "master" ]]; then
-	fan_control_file[2]="$sysdir/fan2_manual"
-	fan_label[2]="$sysdir/fan2_label"
-    label[2]=$(< ${fan_label[2]} )
-    label[2]=${label[2],,}
-
-	fan_control_file[3]="$sysdir/fan3_manual"
-	fan_label[3]="$sysdir/fan3_label"
-    label[3]=$(< ${fan_label[3]} )
-    label[3]=${label[3],,}
+fan_info 1
+if ! [[ "${label[1]}" =~ ^(exhaust|master)$ ]]; then
+	fan_info 2
+	fan_info 3
 fi
 
 # fan() - set fan
@@ -34,9 +28,9 @@ fan_function() {
     local fan_manual fan_max_file fan_max fan_min_file fan_min
     local fan_current_output_file
     local -i fan_100 fan_net fan_final
-    fan="$1"
+    local fan="$1"
     # Getting fan files and data from applesmc.768
-    fan_manual=$(cat ${fan_control_file[$fan]})
+    fan_manual=$(cat "${fan_control_file[$fan]}")
 
     fan_max_file="$sysdir/fan${fan}_max"
     fan_max=$(cat "$fan_max_file")
@@ -59,7 +53,7 @@ fan_function() {
 
     # Switch back fan1 to auto mode
     if [ "$input" = "auto" ]; then
-        echo "0" > ${fan_control_file[$fan]}
+        echo "0" > "${fan_control_file[$fan]}"
         printf "fan mode set to auto"
     else
 
@@ -72,17 +66,34 @@ fan_function() {
     fi
 }
 
-# Commands
+usage() {
+    printf "usage: %s [fan_type] value\n" "$CMD"
+    printf '  fan_type: "auto", "master", "exhaust", "hdd", "cpu" or "odd"\n'
+    printf '  if fan_type is not "auto", value is an integer between 0 and 100\n'
+    exit 1
+}
+
+if (($# == 0)); then
+    printf "Available fans:\n"
+    printf "  %s\n" "${label[1]}"
+    if ! [[ "${label[1]}" =~ ^(exhaust|master)$ ]]; then
+        printf "  %s\n" "${label[2]}"
+        printf "  %s\n" "${label[3]}"
+	fi
+    exit 0
+fi
+
+# fan type and value
 command="$1"
+if [[ "$command" != "auto" ]]; then
+    if (( $# == 2 )); then
+        input="$2"
+    else
+        usage
+    fi
+fi
+
 case "$command" in
-    "")
-        printf "Available fans:\n"
-        printf "  %s\n" "${label[1]}"
-        if [[ "${label[1]}" != "exhaust" && "${label[1]}" != "master" ]]; then
-            printf "  %s\n" "${label[2]}"
-            printf "  %s\n" "${label[3]}"
-	    fi
-        ;;
     ### AUTO CONTROL
     auto)
         echo "0" > "${fan_control_file[1]}"
@@ -96,18 +107,17 @@ case "$command" in
     hdd|cpu|odd)
         for i in 1 2 3; do
             if [ "${label[$i]}" = "$command" ]; then
-                fan_function "$i"
+                fan_function "$i" "$input"
             fi
         done
         ;;
 
-    ### EXHAUST CONTROL
+    ### EXHAUST/MASTER CONTROL
     exhaust|master)
-        fan_function 1
+        fan_function 1 "$input"
         ;;
 
-    ### MASTER CONTROL
-    #master)
-    #    fan_function 1
-    #    ;;
+    *)
+        printf 'unknown command %s\n' "$command"
+        usage
 esac
