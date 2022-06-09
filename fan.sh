@@ -7,13 +7,14 @@ sysdir="/sys/devices/platform/applesmc.768"
 
 declare -a fan_control_file fan_label label
 
-#Match labels with fan number and get control files
+# Match labels with fan number and get control files
 fan_info() {
     local fan="$1"
     fan_control_file[$fan]="$sysdir/fan${fan}_manual"
     fan_label[$fan]="$sysdir/fan${fan}_label"
     label[$fan]=$(< "${fan_label[$fan]}" )
-    label[$fan]=${label[$fan],,}
+    label[$fan]=${label[$fan],,}                  # lowercase
+    label[$fan]=${label[$fan]%% }                 # trim ending space
 }
 
 fan_info 1
@@ -56,9 +57,8 @@ fan_function() {
         echo "0" > "${fan_control_file[$fan]}"
         printf "fan mode set to auto"
     else
-
         # Writing the final value to the applemc files
-        if $fan_final > "$fan_current_output_file"; then
+        if echo $fan_final > "$fan_current_output_file"; then
             printf "fan set to %d rpm.\n" "$fan_final"
         else
             printf "Try running command as sudo\n"
