@@ -39,7 +39,7 @@ impl FanVariants {
         let number = Self::extract_number_from_filename(&filename);
         let label = read_to_string(path)?;
 
-        match label.as_str() {
+        match label.trim().to_lowercase().as_str() {
             "exhaust" => Ok(Self::Exhaust(number)),
             "master" => Ok(Self::Master(number)),
             "hdd" => Ok(Self::Hdd(number)),
