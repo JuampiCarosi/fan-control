@@ -18,7 +18,7 @@ pub fn command_parser(args: &[String]) -> Result<Box<dyn Command>, CustomError> 
     }
 
     let command: Box<dyn Command> = match args[0].as_str() {
-        "" => Box::new(ShowFans::from_args(&args[1..])?),
+        "show" => Box::new(ShowFans::from_args(&args[1..])?),
         _ => Box::new(UnknownCommand::from_args(&args[1..])?),
     };
     Ok(command)
