@@ -7,7 +7,7 @@ pub struct ShowFans {
 }
 
 impl Command for ShowFans {
-    fn execute(&self) -> Result<String, CustomError> {
+    fn execute(&self, _debug: bool) -> Result<String, CustomError> {
         let mut output = String::new();
 
         output.push_str("Available fans:\n");

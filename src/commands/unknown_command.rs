@@ -5,7 +5,7 @@ use super::Command;
 pub struct UnknownCommand();
 
 impl Command for UnknownCommand {
-    fn execute(&self) -> Result<String, CustomError> {
+    fn execute(&self, _debug: bool) -> Result<String, CustomError> {
         return Ok(format!("Unknown command"));
     }
 

@@ -19,7 +19,7 @@ fn main() {
     let command = commands::command_parser(&argv[1..]);
 
     let command_output = match command {
-        Ok(command) => command.execute(),
+        Ok(command) => command.execute(debug_mode),
         Err(err) => {
             if debug_mode {
                 println!("{:?}", err);

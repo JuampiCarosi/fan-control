@@ -8,7 +8,7 @@ pub struct ManualControl {
 }
 
 impl Command for ManualControl {
-    fn execute(&self) -> Result<String, CustomError> {
+    fn execute(&self, debug: bool) -> Result<String, CustomError> {
         self.fan.set_manual_mode()?;
         let max_speed = self.fan.get_max_speed()?;
         let min_speed = self.fan.get_min_speed()?;
@@ -16,6 +16,14 @@ impl Command for ManualControl {
         let rpm_to_add = self.speed * fan_rpm_range / 100;
         let new_speed = min_speed + rpm_to_add;
         self.fan.set_speed(new_speed)?;
+
+        if debug {
+            println!("max_speed: {}", max_speed);
+            println!("min_speed: {}", min_speed);
+            println!("fan_rpm_range: {}", fan_rpm_range);
+            println!("rpm_to_add: {}", rpm_to_add);
+            println!("new_speed: {}", new_speed);
+        }
 
         Ok(format!("{} set to {}%", self.fan, self.speed))
     }

@@ -7,7 +7,7 @@ mod show_fans;
 mod unknown_command;
 
 pub trait Command {
-    fn execute(&self) -> Result<String, CustomError>;
+    fn execute(&self, debug: bool) -> Result<String, CustomError>;
     fn from_args(args: &[String]) -> Result<Self, CustomError>
     where
         Self: Sized;
