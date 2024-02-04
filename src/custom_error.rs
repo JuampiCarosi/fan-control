@@ -1,13 +1,10 @@
-use std::{
-    fmt::{Debug, Display},
-    rc::Rc,
-};
+use std::fmt::{Debug, Display};
 
-#[derive(Clone)]
+#[derive()]
 pub struct CustomError {
     pub display_message: String,
     pub internal_message: String,
-    pub cause: Option<Rc<dyn std::error::Error>>,
+    pub cause: Option<Box<dyn std::error::Error>>,
     pub is_fatal: bool,
 }
 
@@ -29,5 +26,16 @@ impl Debug for CustomError {
         };
 
         write!(f, "{}", error_message)
+    }
+}
+
+impl CustomError {
+    pub fn new_simple(display_message: &str) -> Self {
+        CustomError {
+            display_message: display_message.to_string(),
+            internal_message: display_message.to_string(),
+            cause: None,
+            is_fatal: false,
+        }
     }
 }

@@ -2,7 +2,6 @@ use std::{
     fmt::{Debug, Display},
     fs::{self, ReadDir},
     path::Path,
-    rc::Rc,
 };
 
 use regex::Regex;
@@ -13,7 +12,7 @@ const FANS_BASE_PATH: &str = "/sys/devices/platform/applesmc.768";
 
 /// Represents all possible fan variants.
 /// The unit of the enum is the fan number.
-pub enum FanVariants {
+pub enum FanVariant {
     Exhaust(u8),
     Master(u8),
     Hdd(u8),
@@ -21,7 +20,7 @@ pub enum FanVariants {
     Odd(u8),
 }
 
-impl Display for FanVariants {
+impl Display for FanVariant {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Exhaust(number) => write!(f, "Exhaust fan {}", number),
@@ -33,7 +32,7 @@ impl Display for FanVariants {
     }
 }
 
-impl FanVariants {
+impl FanVariant {
     fn from_path(path: &Path) -> Result<Self, CustomError> {
         let filename = get_name(&path)?;
         let number = Self::extract_number_from_filename(&filename);
@@ -57,7 +56,26 @@ impl FanVariants {
         }
     }
 
-    pub fn get_available() -> Result<Vec<Self>, CustomError> {
+   pub fn from_str(string: &str) -> Result<Self, CustomError> {
+
+    let available_fans = Self::get_available_fans()?;
+
+    let fan = available_fans.into_iter().find(|fan| fan.get_label() == string);
+
+    match fan {
+        Some(fan) => Ok(fan),
+        None => Err(CustomError {
+            display_message: format!("Error: {:?} is not a valid fan label", string),
+            internal_message: format!(
+                "Error: {:?} is not a valid fan label from string {:?}",
+                string, string
+            ),
+            cause: None,
+            is_fatal: false,
+        }),
+    }}
+
+    pub fn get_available_fans() -> Result<Vec<Self>, CustomError> {
         let dir = match read_dir(FANS_BASE_PATH) {
             Ok(dir) => dir,
             Err(err) => {
@@ -80,7 +98,7 @@ impl FanVariants {
             let entry = entry.map_err(|e| CustomError {
                 display_message: format!("Error reading {:?} directory", FANS_BASE_PATH),
                 internal_message: format!("Error unwrapping entry from {:?} ", FANS_BASE_PATH),
-                cause: Some(Rc::new(e)),
+                cause: Some(Box::new(e)),
                 is_fatal: true,
             })?;
             let path = entry.path();
@@ -105,7 +123,7 @@ impl FanVariants {
                 "Error creating regex from pattern: {} on string {}",
                 pattern, string
             ),
-            cause: Some(Rc::new(e)),
+            cause: Some(Box::new(e)),
             is_fatal: false,
         })?;
         Ok(regex.is_match(string))
@@ -117,6 +135,80 @@ impl FanVariants {
         let number = regex.find(string).unwrap().as_str();
         number.parse::<u8>().unwrap()
     }
+
+    pub fn get_label(&self) -> String {
+        match self {
+            Self::Exhaust(_) => format!("exhaust"),
+            Self::Master(_) => format!("master"),
+            Self::Hdd(_) => format!("hdd"),
+            Self::Cpu(_) => format!("cpu"),
+            Self::Odd(_) => format!("odd"),
+        }
+    }
+
+    pub fn get_fan_number(&self) -> u8 {
+        match self {
+            Self::Exhaust(number) => *number,
+            Self::Master(number) => *number,
+            Self::Hdd(number) => *number,
+            Self::Cpu(number) => *number,
+            Self::Odd(number) => *number,
+        }
+    }
+
+    pub fn set_manual_mode(&self) -> Result<(), CustomError> {
+        let maual_file = format!("{FANS_BASE_PATH}/fan{}_manual", self.get_fan_number());
+        fs::write(&maual_file, "1").map_err(|e| CustomError {
+            display_message: format!("Error setting manual mode for {}", self),
+            internal_message: format!(
+                "Error writing 1 to {:?} file in set_manual_mode fn to fan {}",
+                maual_file, self
+            ),
+            cause: Some(Box::new(e)),
+            is_fatal: true,
+        })
+    }
+
+    pub fn get_max_speed(&self) -> Result<u8, CustomError> {
+        let max_speed_file = format!("{FANS_BASE_PATH}/fan{}_max", self.get_fan_number());
+        let max_speed = read_to_string(&max_speed_file)?.parse::<u8>().map_err(|e| CustomError {
+            display_message: format!("Error reading max speed for {}", self),
+            internal_message: format!(
+                "Error parsing max speed from {:?} file in get_max_speed fn to fan {}",
+                max_speed_file, self
+            ),
+            cause: Some(Box::new(e)),
+            is_fatal: true,
+        })?;
+        Ok(max_speed)
+    }
+
+    pub fn get_min_speed(&self) -> Result<u8, CustomError> {
+        let min_speed_file = format!("{FANS_BASE_PATH}/fan{}_min", self.get_fan_number());
+        let min_speed = read_to_string(&min_speed_file)?.parse::<u8>().map_err(|e| CustomError {
+            display_message: format!("Error reading min speed for {}", self),
+            internal_message: format!(
+                "Error parsing min speed from {:?} file in get_min_speed fn to fan {}",
+                min_speed_file, self
+            ),
+            cause: Some(Box::new(e)),
+            is_fatal: true,
+        })?;
+        Ok(min_speed)
+    }
+
+    pub fn set_speed(&self, speed: u8) -> Result<(), CustomError> {
+        let speed_file = format!("{FANS_BASE_PATH}/fan{}_output", self.get_fan_number());
+        fs::write(&speed_file, speed.to_string()).map_err(|e| CustomError {
+            display_message: format!("Error setting speed for {}", self),
+            internal_message: format!(
+                "Error writing {} to {:?} file in set_speed fn to fan {}",
+                speed, speed_file, self
+            ),
+            cause: Some(Box::new(e)),
+            is_fatal: true,
+        })
+    }
 }
 
 pub fn read_dir<P>(directory: &P) -> Result<ReadDir, CustomError>
@@ -126,7 +218,7 @@ where
     let metadada_dir = fs::metadata(directory).map_err(|err| CustomError {
         display_message: format!("Error: the directory {:?} doesn't exist", directory),
         internal_message: format!("Error reading {:?} metadata in read_dir fn", directory),
-        cause: Some(Rc::new(err)),
+        cause: Some(Box::new(err)),
         is_fatal: false,
     })?;
 
@@ -142,27 +234,17 @@ where
     fs::read_dir(directory).map_err(|e| CustomError {
         display_message: format!("Error reading {:?} directory", directory),
         internal_message: format!("Error fs::read_dir {:?} in read_dir fn", directory),
-        cause: Some(Rc::new(e)),
+        cause: Some(Box::new(e)),
         is_fatal: false,
     })
 }
 
 pub fn get_name(directory: &Path) -> Result<String, CustomError> {
-    let error = CustomError {
-        display_message: format!("Error: failed to read {:?} directory ", directory),
-        internal_message: format!(
-            "Error: failed get the name of the directory: {:?} ",
-            directory
-        ),
-        cause: None,
-        is_fatal: false,
-    };
-
     let directorio_split = directory
         .file_name()
-        .ok_or(error.clone())?
+        .ok_or(CustomError::new_simple(&format!("Error: failed to read {:?} directory ", directory)))?
         .to_str()
-        .ok_or(error)?;
+        .ok_or(CustomError::new_simple(&format!("Error: failed to read {:?} directory ", directory)))?;
 
     Ok(directorio_split.to_string())
 }
@@ -179,7 +261,7 @@ where
                 "Error reading {:?} file on fn read_to_string",
                 path.as_ref()
             ),
-            cause: Some(Rc::new(err)),
+            cause: Some(Box::new(err)),
             is_fatal: false,
         }),
     }

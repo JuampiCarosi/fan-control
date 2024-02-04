@@ -1,9 +1,9 @@
-use crate::{custom_error::CustomError, fan_variants::FanVariants};
+use crate::{custom_error::CustomError, fan_variants::FanVariant};
 
 use super::Command;
 
 pub struct ShowFans {
-    pub available_fans: Vec<FanVariants>,
+    pub available_fans: Vec<FanVariant>,
 }
 
 impl Command for ShowFans {
@@ -23,7 +23,7 @@ impl Command for ShowFans {
     where
         Self: Sized,
     {
-        let available_fans = FanVariants::get_available()?;
+        let available_fans = FanVariant::get_available_fans()?;
 
         return Ok(ShowFans { available_fans });
     }
