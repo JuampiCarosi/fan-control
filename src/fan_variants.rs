@@ -169,9 +169,9 @@ impl FanVariant {
         })
     }
 
-    pub fn get_max_speed(&self) -> Result<u8, CustomError> {
+    pub fn get_max_speed(&self) -> Result<u16, CustomError> {
         let max_speed_file = format!("{FANS_BASE_PATH}/fan{}_max", self.get_fan_number());
-        let max_speed = read_to_string(&max_speed_file)?.parse::<u8>().map_err(|e| CustomError {
+        let max_speed = read_to_string(&max_speed_file)?.parse::<u16>().map_err(|e| CustomError {
             display_message: format!("Error reading max speed for {}", self),
             internal_message: format!(
                 "Error parsing max speed from {:?} file in get_max_speed fn to fan {}",
@@ -183,9 +183,9 @@ impl FanVariant {
         Ok(max_speed)
     }
 
-    pub fn get_min_speed(&self) -> Result<u8, CustomError> {
+    pub fn get_min_speed(&self) -> Result<u16, CustomError> {
         let min_speed_file = format!("{FANS_BASE_PATH}/fan{}_min", self.get_fan_number());
-        let min_speed = read_to_string(&min_speed_file)?.parse::<u8>().map_err(|e| CustomError {
+        let min_speed = read_to_string(&min_speed_file)?.parse::<u16>().map_err(|e| CustomError {
             display_message: format!("Error reading min speed for {}", self),
             internal_message: format!(
                 "Error parsing min speed from {:?} file in get_min_speed fn to fan {}",
@@ -197,7 +197,7 @@ impl FanVariant {
         Ok(min_speed)
     }
 
-    pub fn set_speed(&self, speed: u8) -> Result<(), CustomError> {
+    pub fn set_speed(&self, speed: u16) -> Result<(), CustomError> {
         let speed_file = format!("{FANS_BASE_PATH}/fan{}_output", self.get_fan_number());
         fs::write(&speed_file, speed.to_string()).map_err(|e| CustomError {
             display_message: format!("Error setting speed for {}", self),

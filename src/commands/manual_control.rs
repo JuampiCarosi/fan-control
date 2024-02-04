@@ -4,7 +4,7 @@ use super::Command;
 
 pub struct ManualControl {
     pub fan: FanVariant,
-    pub speed: u8,
+    pub speed: u16,
 }
 
 impl Command for ManualControl {
@@ -37,7 +37,7 @@ impl Command for ManualControl {
         };
 
         let fan = FanVariant::from_str(&args[0])?;
-        let speed = args[1].parse::<u8>().map_err(|e| CustomError {
+        let speed = args[1].parse::<u16>().map_err(|e| CustomError {
             display_message: "Error: speed must be a number".to_string(),
             internal_message: format!("Error: speed must be a number, got {:?}", e),
             cause: None,
