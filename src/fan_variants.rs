@@ -171,11 +171,12 @@ impl FanVariant {
 
     pub fn get_max_speed(&self) -> Result<u16, CustomError> {
         let max_speed_file = format!("{FANS_BASE_PATH}/fan{}_max", self.get_fan_number());
-        let max_speed = read_to_string(&max_speed_file)?.parse::<u16>().map_err(|e| CustomError {
+        let max_speed_string = read_to_string(&max_speed_file)?;
+        let max_speed = max_speed_string.trim().parse::<u16>().map_err(|e| CustomError {
             display_message: format!("Error reading max speed for {}", self),
             internal_message: format!(
-                "Error parsing max speed from {:?} file in get_max_speed fn to fan {}",
-                max_speed_file, self
+                "Error parsing max speed from {:?} file in get_max_speed fn to fan {}, got {:?}",
+                max_speed_file, self, max_speed_string
             ),
             cause: Some(Box::new(e)),
             is_fatal: true,
@@ -185,11 +186,12 @@ impl FanVariant {
 
     pub fn get_min_speed(&self) -> Result<u16, CustomError> {
         let min_speed_file = format!("{FANS_BASE_PATH}/fan{}_min", self.get_fan_number());
-        let min_speed = read_to_string(&min_speed_file)?.parse::<u16>().map_err(|e| CustomError {
+        let min_speed_string = read_to_string(&min_speed_file)?;
+        let min_speed = min_speed_string.trim().parse::<u16>().map_err(|e| CustomError {
             display_message: format!("Error reading min speed for {}", self),
             internal_message: format!(
-                "Error parsing min speed from {:?} file in get_min_speed fn to fan {}",
-                min_speed_file, self
+                "Error parsing min speed from {:?} file in get_min_speed fn to fan {}, got {:?}",
+                min_speed_file, self, min_speed_string
             ),
             cause: Some(Box::new(e)),
             is_fatal: true,
