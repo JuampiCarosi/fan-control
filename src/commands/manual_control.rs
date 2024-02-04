@@ -13,7 +13,7 @@ impl Command for ManualControl {
         let max_speed = self.fan.get_max_speed()?;
         let min_speed = self.fan.get_min_speed()?;
         let fan_rpm_range = max_speed - min_speed;
-        let rpm_to_add = self.speed * fan_rpm_range / 100;
+        let rpm_to_add = (self.speed as f64 * fan_rpm_range as f64 / 100.0) as u16;
         let new_speed = min_speed + rpm_to_add;
         self.fan.set_speed(new_speed)?;
 
