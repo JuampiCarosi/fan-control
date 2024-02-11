@@ -16,7 +16,7 @@ impl Command for ShowFans {
             output.push_str(&format!("  {}\n", fan));
         }
 
-        return Ok(output);
+        Ok(output)
     }
 
     fn from_args(_args: &[String]) -> Result<Self, CustomError>
@@ -25,6 +25,6 @@ impl Command for ShowFans {
     {
         let available_fans = FanVariant::get_available_fans()?;
 
-        return Ok(ShowFans { available_fans });
+        Ok(ShowFans { available_fans })
     }
 }

@@ -6,7 +6,7 @@ pub struct UnknownCommand();
 
 impl Command for UnknownCommand {
     fn execute(&self, _debug: bool) -> Result<String, CustomError> {
-        return Ok(format!("Unknown command"));
+        Ok("Unknown command".to_string())
     }
 
     fn from_args(_args: &[String]) -> Result<Self, CustomError>

@@ -10,7 +10,7 @@ fn is_debug_flag(args: &mut Vec<String>) -> bool {
         return true;
     }
 
-    return false;
+    false
 }
 
 fn main() {

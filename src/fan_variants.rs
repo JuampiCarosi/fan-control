@@ -34,7 +34,7 @@ impl Display for FanVariant {
 
 impl FanVariant {
     fn from_path(path: &Path) -> Result<Self, CustomError> {
-        let filename = get_name(&path)?;
+        let filename = get_name(path)?;
         let number = Self::extract_number_from_filename(&filename);
         let label = read_to_string(path)?;
 
@@ -80,7 +80,7 @@ impl FanVariant {
             Ok(dir) => dir,
             Err(err) => {
                 return Err(CustomError {
-                    display_message: format!("Error reading fans file directory"),
+                    display_message: "Error reading fans file directory".to_string(),
                     internal_message: format!(
                         "Error: failed to read {:?} directory in get_available fn\n Original message: {:?}",
                         FANS_BASE_PATH, 
@@ -112,13 +112,13 @@ impl FanVariant {
             available_fans.push(variant);
         }
 
-        return Ok(available_fans);
+        Ok(available_fans)
     }
 
     fn is_string_fan_label(string: &str) -> Result<bool, CustomError> {
         let pattern = r"^fan\d+_label$";
         let regex = Regex::new(pattern).map_err(|e| CustomError {
-            display_message: format!("Error validating fan files"),
+            display_message: "Error validating fan files".to_string(),
             internal_message: format!(
                 "Error creating regex from pattern: {} on string {}",
                 pattern, string
@@ -138,11 +138,11 @@ impl FanVariant {
 
     pub fn get_label(&self) -> String {
         match self {
-            Self::Exhaust(_) => format!("exhaust"),
-            Self::Master(_) => format!("master"),
-            Self::Hdd(_) => format!("hdd"),
-            Self::Cpu(_) => format!("cpu"),
-            Self::Odd(_) => format!("odd"),
+            Self::Exhaust(_) => "exhaust".to_string(),
+            Self::Master(_) => "master".to_string(),
+            Self::Hdd(_) => "hdd".to_string(),
+            Self::Cpu(_) => "cpu".to_string(),
+            Self::Odd(_) => "odd".to_string(),
         }
     }
 

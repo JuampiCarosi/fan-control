@@ -14,7 +14,7 @@ pub trait Command {
 }
 
 pub fn command_parser(args: &[String]) -> Result<Box<dyn Command>, CustomError> {
-    if args.len() == 0 {
+    if args.is_empty() {
         return Ok(Box::new(UnknownCommand::from_args(&[])?));
     }
 
