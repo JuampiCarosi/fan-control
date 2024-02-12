@@ -26,9 +26,9 @@ pub fn command_parser(args: &[String]) -> Result<Box<dyn Command>, CustomError> 
     }
 
     let command: Box<dyn Command> = match args {
-        args if ShowFans::args_match(args)? => Box::new(ShowFans::from_args(&args[1..])?),
-        args if ManualControl::args_match(args)? => Box::new(ManualControl::from_args(&args[1..])?),
-        args if AutoControl::args_match(args)? => Box::new(AutoControl::from_args(&args[1..])?),
+        args if ShowFans::args_match(args)? => Box::new(ShowFans::from_args(args)?),
+        args if ManualControl::args_match(args)? => Box::new(ManualControl::from_args(args)?),
+        args if AutoControl::args_match(args)? => Box::new(AutoControl::from_args(args)?),
         _ => Box::new(UnknownCommand::from_args(args)?),
     };
     Ok(command)
