@@ -56,6 +56,13 @@ impl FanVariant {
         }
     }
 
+    pub fn is_valid_label(string: &str) -> Result<bool, CustomError> {
+        let available_fans = Self::get_available_fans()?;
+       Ok( available_fans
+            .iter()
+            .any(|fan| fan.get_label().to_lowercase() == string.to_lowercase()))
+    }
+
    pub fn from_str(string: &str) -> Result<Self, CustomError> {
 
     let available_fans = Self::get_available_fans()?;
@@ -162,6 +169,18 @@ impl FanVariant {
             display_message: format!("Error setting manual mode for {}", self),
             internal_message: format!(
                 "Error writing 1 to {:?} file in set_manual_mode fn to fan {}",
+                maual_file, self
+            ),
+            cause: Some(Box::new(e)),
+            is_fatal: true,
+        })
+    }
+    pub fn set_auto_mode(&self) -> Result<(), CustomError> {
+        let maual_file = format!("{FANS_BASE_PATH}/fan{}_manual", self.get_fan_number());
+        fs::write(&maual_file, "0").map_err(|e| CustomError {
+            display_message: format!("Error setting auto mode for {}", self),
+            internal_message: format!(
+                "Error writing 1 to {:?} file in set_auto_mode fn to fan {}",
                 maual_file, self
             ),
             cause: Some(Box::new(e)),

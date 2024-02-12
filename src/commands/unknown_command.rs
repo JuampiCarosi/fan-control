@@ -15,4 +15,8 @@ impl Command for UnknownCommand {
     {
         Ok(UnknownCommand())
     }
+
+    fn args_match(_args: &[String]) -> Result<bool, CustomError> {
+        Ok(true)
+    }
 }

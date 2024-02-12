@@ -27,4 +27,12 @@ impl Command for ShowFans {
 
         Ok(ShowFans { available_fans })
     }
+
+    fn args_match(args: &[String]) -> Result<bool, CustomError> {
+        if args.len() != 1 {
+            return Ok(false);
+        }
+
+        Ok(args[0] == "show")
+    }
 }

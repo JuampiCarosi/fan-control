@@ -54,14 +54,12 @@ impl Command for ManualControl {
 
         Ok(ManualControl { fan, speed })
     }
-}
 
-// fn parse_interror(e: ParseIntError) -> CustomError {
-//     let parsed_error: error::Error = e.into();
-//     CustomError {
-//         display_message: "Error: speed must be a number".to_string(),
-//         internal_message: format!("Error: speed must be a number, got {:?}", e),
-//         cause: Some(Rc::new(e.into())),
-//         is_fatal: false,
-//     }
-// }
+    fn args_match(args: &[String]) -> Result<bool, CustomError> {
+        if args.len() != 2 {
+            return Ok(false);
+        }
+
+        Ok(FanVariant::is_valid_label(&args[0])? && args[1].parse::<u16>().is_ok())
+    }
+}
