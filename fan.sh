@@ -17,7 +17,7 @@ fan_info() {
 }
 
 fan_info 1
-if ! [[ "${label[1]}" =~ ^(exhaust|master)$ ]]; then
+if ! [[ "${label[1]}" =~ ^(exhaust|master|main)$ ]]; then
 	fan_info 2
 	fan_info 3
 fi
@@ -109,7 +109,7 @@ case "$command" in
         ;;
 
     ### EXHAUST/MASTER CONTROL
-    exhaust|master)
+    exhaust|master|main)
         fan_function 1 "$percent"
         ;;
 
